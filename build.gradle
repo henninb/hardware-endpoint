@@ -120,7 +120,7 @@ compileTestKotlin {
 }
 kapt {
     javacOptions {
-        option("-Xlint:-options")
+        option("-Xlint:none")
     }
 }
 

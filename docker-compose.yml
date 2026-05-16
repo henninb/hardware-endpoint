@@ -20,6 +20,11 @@ services:
       - ./ssl:/opt/hardware-endpoint/ssl
     extra_hosts:
       - "hornsup:${HOST_IP}"
+    environment:
+      DATASOURCE: jdbc:postgresql://postgresql-server:5432/hardware_db
+      DATASOURCE_DRIVER: org.postgresql.Driver
+      DATASOURCE_USERNAME: henninb
+      SERVER_PORT: "8080"
     env_file:
       - env.secrets
     depends_on:
@@ -38,7 +43,6 @@ services:
       - env.secrets
   postgresql-server:
     image: postgres:18.3
-    user: "${CURRENT_UID}:${CURRENT_GID}"
     container_name: postgresql-server
     ports:
       - "5433:5432"
@@ -47,7 +51,7 @@ services:
     env_file:
       - env.postgresql
     volumes:
-      - ./database-data:/var/lib/postgresql/data
+      - ./database-data:/var/lib/postgresql
 networks:
   default:
     name: endpoint-net
