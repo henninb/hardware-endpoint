@@ -7,10 +7,10 @@ import javax.persistence.Converter
 class LowerCaseConverter : AttributeConverter<String, String> {
 
     override fun convertToDatabaseColumn(attribute: String): String {
-        return attribute.toLowerCase()
+        return attribute.lowercase()
     }
 
     override fun convertToEntityAttribute(attribute: String): String {
-        return attribute.toLowerCase()
+        return attribute.lowercase()
     }
 }

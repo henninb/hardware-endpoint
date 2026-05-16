@@ -37,7 +37,7 @@ services:
       - env.influx
       - env.secrets
   postgresql-server:
-    image: postgres:12.4
+    image: postgres:18.3
     user: "${CURRENT_UID}:${CURRENT_GID}"
     container_name: postgresql-server
     ports:

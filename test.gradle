@@ -38,34 +38,39 @@ sourceSets {
 //provide dependency scopes
 configurations {
     integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
     functionalTestImplementation.extendsFrom testImplementation
-    functionalTestRuntime.extendsFrom testRuntime
+    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
     performanceTestImplementation.extendsFrom testImplementation
-    performanceRuntime.extendsFrom testRuntime
+    performanceTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 compileTestKotlin {
-    //kotlinOptions.jvmTarget = "11"
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "21"
 }
 
 dependencies {
-    testImplementation("io.micronaut:micronaut-inject-groovy:${micronautVersion}")
-    testImplementation("org.spockframework:spock-core:${spockVersion}") {
-        exclude group: "org.codehaus.groovy", module: "groovy-all"
+    testImplementation localGroovy()
+    testImplementation("io.micronaut:micronaut-inject-groovy:${micronautVersion}") {
+        exclude group: "org.codehaus.groovy"
     }
-    testImplementation("io.micronaut.test:micronaut-test-spock:${micronautSpockVersion}")
+    testImplementation("org.spockframework:spock-core:${spockVersion}") {
+        exclude group: "org.codehaus.groovy"
+    }
+    testImplementation("io.micronaut.test:micronaut-test-spock:${micronautSpockVersion}") {
+        exclude group: "org.codehaus.groovy"
+    }
     testImplementation "org.apache.tomcat:tomcat-el-api:9.0.39"
     testImplementation "org.apache.tomcat:tomcat-jasper-el:9.0.39"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
 //provide dependency scopes
 configurations {
     integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntime.extendsFrom testRuntime
-    functionalTestCompile.extendsFrom testImplementation
-    testFunctionalCompile.extendsFrom testRuntime
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    functionalTestImplementation.extendsFrom testImplementation
+    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 test {
@@ -102,7 +107,7 @@ task performanceTest(type: Test) {
     classpath = project.sourceSets.performanceTest.runtimeClasspath
 }
 
-integrationTest.reports.html.destination = file("$buildDir/reports/test/integration")
-functionalTest.reports.html.destination = file("$buildDir/reports/test/functional")
-performanceTest.reports.html.destination = file("$buildDir/reports/test/performance")
+integrationTest.reports.html.outputLocation = layout.buildDirectory.dir("reports/test/integration")
+functionalTest.reports.html.outputLocation = layout.buildDirectory.dir("reports/test/functional")
+performanceTest.reports.html.outputLocation = layout.buildDirectory.dir("reports/test/performance")
 test.dependsOn functionalTest
